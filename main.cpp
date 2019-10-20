@@ -1,4 +1,3 @@
-#define GLEW_STATIC
 #include<GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "testLog.h"
@@ -47,6 +46,8 @@ int main(void)
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, (2 * sizeof(float)), (const void*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

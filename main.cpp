@@ -1,3 +1,5 @@
+#define DEBUG
+
 #include<GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "testLog.h"
@@ -18,13 +20,46 @@
     #define GetCurrentDir getcwd
 #endif
 
+// error checking ---------------------------------------------for debug----------------------------------------
+#ifdef DEBUG
+    #define ASSERT(x) if (!(x)) __builtin_trap()
+    #define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+    #define GLCallSetValue(return_type, func) GLClearError();\
+        return_type = func;\
+        ASSERT(GLLogCall(#func, __FILE__, __LINE__))
 
+#else
+    #define GLCall(x) x
+    #define GLCallSetValue(return_type, func) return_type = func
+#endif
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static void GLClearError(){
+    while(glGetError() != GL_NO_ERROR);
+}
+
+
+static bool GLLogCall(const char* function, const char* file, int line){
+    while(GLenum error = glGetError()){
+        std::cout << "[OpenGL Error] (" << error <<" (0x" << std::hex << error << ") File: "<< file <<
+            " Function: "<< function << " line: " << std::dec << line <<" )\n";
+        return false;
+    }
+    return true;
+}
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////
 static std::string GetCurrentWorkingDir() {
   char buff[FILENAME_MAX];
   GetCurrentDir( buff, FILENAME_MAX );
   std::string current_working_dir(buff);
   return current_working_dir;
 }
+/////////////////////////////////////////////////////////////////////////
 
 
 static std::tuple<std::string, std::string> parseShader(const std::string& filePath){
@@ -54,22 +89,22 @@ static std::tuple<std::string, std::string> parseShader(const std::string& fileP
 
 
 static unsigned int compileShader(unsigned int type, const std::string& source){
-    unsigned int id = glCreateShader(type);
+    GLCallSetValue( unsigned int id , glCreateShader(type));
     const char* src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);
-    glCompileShader(id);
+    GLCall( glShaderSource(id, 1, &src, nullptr));
+    GLCall( glCompileShader(id));
 
     int result;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+    GLCall( glGetShaderiv(id, GL_COMPILE_STATUS, &result));
     if(result == GL_FALSE){
         int length;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+        GLCall( glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
-        glGetShaderInfoLog(id, length, &length, message);
+        GLCall( glGetShaderInfoLog(id, length, &length, message));
         testLog("Failed to compile shader!, type==>");
         testLog((type == GL_VERTEX_SHADER) ? "vertex" : "fragent");
         testLog(message);
-        glDeleteShader(id);
+        GLCall( glDeleteShader(id));
         return 0;
     }
 
@@ -78,17 +113,17 @@ static unsigned int compileShader(unsigned int type, const std::string& source){
 
 
 static unsigned int createShader(const std::string& vertexShader, const std::string& fragmentShader){
-    unsigned int program = glCreateProgram();
-    unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    GLCallSetValue( unsigned int program , glCreateProgram());
+    GLCallSetValue( unsigned int vs , compileShader(GL_VERTEX_SHADER, vertexShader));
+    GLCallSetValue( unsigned int fs , compileShader(GL_FRAGMENT_SHADER, fragmentShader));
 
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
-    glValidateProgram(program);
+    GLCall(glAttachShader(program, vs));
+    GLCall( glAttachShader(program, fs));
+    GLCall( glLinkProgram(program));
+    GLCall( glValidateProgram(program));
 
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    GLCall( glDeleteShader(vs));
+    GLCall( glDeleteShader(fs));
 
     return program;
 }
@@ -137,18 +172,18 @@ int main(void)
     };
 
     unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, (4 * 2 * sizeof(float)), positions, GL_STATIC_DRAW);
+    GLCall( glGenBuffers(1, &buffer));
+    GLCall( glBindBuffer(GL_ARRAY_BUFFER, buffer));
+    GLCall( glBufferData(GL_ARRAY_BUFFER, (4 * 2 * sizeof(float)), positions, GL_STATIC_DRAW));
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, (2 * sizeof(float)), (const void*)0);
+    GLCall( glEnableVertexAttribArray(0));
+    GLCall( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, (2 * sizeof(float)), (const void*)0));
 
     //index buffer
     unsigned int ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (2 * 3 * sizeof(unsigned int)), indecies, GL_STATIC_DRAW);
+    GLCall( glGenBuffers(1, &ibo));
+    GLCall( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+    GLCall( glBufferData(GL_ELEMENT_ARRAY_BUFFER, (2 * 3 * sizeof(unsigned int)), indecies, GL_STATIC_DRAW));
 
     /*std::string vertexShader = R"glsi(
         #version 330 core
@@ -173,7 +208,7 @@ int main(void)
     auto[vertexShader,fragmentShader] = parseShader(GetCurrentWorkingDir() + "/res/shaders/basic.shader");
 
     unsigned int shader = createShader(vertexShader,fragmentShader);
-    glUseProgram(shader);
+    GLCall(glUseProgram(shader));
 
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -192,7 +227,7 @@ int main(void)
 
         //triangle
         //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, (2*3)/*num of indecies*/, GL_UNSIGNED_INT, nullptr);
+        GLCall(glDrawElements(GL_TRIANGLES, (2*3)/*num of indecies*/, GL_UNSIGNED_INT, nullptr));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -201,7 +236,7 @@ int main(void)
         glfwPollEvents();
     }
 
-    glDeleteProgram(shader);
+    GLCall(glDeleteProgram(shader));
 
     glfwTerminate();
     return 0;

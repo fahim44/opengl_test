@@ -40,6 +40,9 @@ list(APPEND EXTRA_LIBS ${OPENGL_glu_LIBRARY})
 target_include_directories(${PROJECT_NAME} PUBLIC ${EXTRA_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
 
+#copy resource files
+configure_file(${PROJECT_SOURCE_DIR}/res/shaders/basic.shader ${PROJECT_BINARY_DIR}/res/shaders/basic.shader COPYONLY)
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

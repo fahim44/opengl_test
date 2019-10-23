@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include<iostream>
 
-#include "testLog.h"
 #include "utilities.h"
 #include "shaderLib.h"
 
@@ -29,7 +28,7 @@ int main(void)
 
     // glew init
     if(glewInit() != GLEW_OK){
-        testLog("glew init failed");
+        std::cout << "glew init failed\n";
         return -1;
     }
     std::cout << (glGetString(GL_VERSION)) << "\n";

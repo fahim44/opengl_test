@@ -3,6 +3,7 @@ project(cmake_test VERSION 0.1.0)
 
 set(CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED True)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include(CTest)
 enable_testing()
@@ -12,8 +13,6 @@ add_test(NAME Runs COMMAND cmake_test)
 add_executable(${PROJECT_NAME} main.cpp)
 
 #sub_dir
-add_subdirectory(testLog)
-list(APPEND EXTRA_LIBS testLog)
 
 add_subdirectory(utilities)
 list(APPEND EXTRA_LIBS utilities)

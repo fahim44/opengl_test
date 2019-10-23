@@ -30,6 +30,8 @@ std::tuple<std::string, std::string> parseShader(const std::string& filePath){
         }
     }
     stream.close();
+    if(type == ShaderType::NONE)
+        return {"",""};
     return { ss[0].str(), ss[1].str() };
 }
 
@@ -63,7 +65,7 @@ unsigned int createShader(const std::string& vertexShader, const std::string& fr
     GLCall( unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader));
     GLCall( unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader));
 
-    GLCall(glAttachShader(program, vs));
+    GLCall( glAttachShader(program, vs));
     GLCall( glAttachShader(program, fs));
     GLCall( glLinkProgram(program));
     GLCall( glValidateProgram(program));

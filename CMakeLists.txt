@@ -7,18 +7,20 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include(CTest)
 enable_testing()
-add_test(NAME Runs COMMAND cmake_test)
+#add_test(NAME Runs COMMAND cmake_test)
 
 
 add_executable(${PROJECT_NAME} main.cpp)
 
 #sub_dir
-
 add_subdirectory(utilities)
 list(APPEND EXTRA_LIBS utilities)
 
 add_subdirectory(shaderLib)
 list(APPEND EXTRA_LIBS shaderLib)
+
+add_subdirectory(googletest)
+add_subdirectory(gltest)
 
 #opengl
 find_package(glfw3 3.3 REQUIRED)

@@ -1,8 +1,5 @@
-
-
 #include<GL/glew.h>
 #include<iostream>
-#include<string>
 #include<stdio.h>  /* defines FILENAME_MAX */
 
 #ifdef WINDOWS
@@ -12,8 +9,6 @@
     #include<unistd.h>
     #define GetCurrentDir getcwd
 #endif
-
-
 
 
 void GLClearError(){

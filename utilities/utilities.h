@@ -4,7 +4,6 @@
 //#define WINDOWS  /* uncomment this line to use it for windows.*/ 
 
 #include <iostream>
-#include<string>
 
 #ifdef DEBUG
     #define ASSERT(x) if (!(x)) __builtin_trap()

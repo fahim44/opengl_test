@@ -10,13 +10,14 @@
     #define GLCall(x) GLClearError();\
     x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-    #define GLCallSetValue(type_and_variable, func) GLClearError();\
+    /*#define GLCallSetValue(type_and_variable, func) GLClearError();\
         type_and_variable = func;\
-        ASSERT(GLLogCall(#func, __FILE__, __LINE__))
+        ASSERT(GLLogCall(#func, __FILE__, __LINE__))*/
 
 #else
+    #define ASSERT(x) 
     #define GLCall(x) x
-    #define GLCallSetValue(type_and_variable, func) type_and_variable = func
+    //#define GLCallSetValue(type_and_variable, func) type_and_variable = func
 #endif
 
 

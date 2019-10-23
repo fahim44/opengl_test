@@ -36,7 +36,7 @@ std::tuple<std::string, std::string> parseShader(const std::string& filePath){
 
 
 unsigned int compileShader(unsigned int type, const std::string& source){
-    GLCallSetValue( unsigned int id , glCreateShader(type));
+    GLCall( unsigned int id = glCreateShader(type));
     const char* src = source.c_str();
     GLCall( glShaderSource(id, 1, &src, nullptr));
     GLCall( glCompileShader(id));
@@ -60,9 +60,9 @@ unsigned int compileShader(unsigned int type, const std::string& source){
 
 
 unsigned int createShader(const std::string& vertexShader, const std::string& fragmentShader){
-    GLCallSetValue( unsigned int program , glCreateProgram());
-    GLCallSetValue( unsigned int vs , compileShader(GL_VERTEX_SHADER, vertexShader));
-    GLCallSetValue( unsigned int fs , compileShader(GL_FRAGMENT_SHADER, fragmentShader));
+    GLCall( unsigned int program = glCreateProgram());
+    GLCall( unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader));
+    GLCall( unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader));
 
     GLCall(glAttachShader(program, vs));
     GLCall( glAttachShader(program, fs));

@@ -15,6 +15,9 @@ add_executable(${PROJECT_NAME} main.cpp)
 add_subdirectory(testLog)
 list(APPEND EXTRA_LIBS testLog)
 
+add_subdirectory(utilities)
+list(APPEND EXTRA_LIBS utilities)
+
 #opengl
 find_package(glfw3 3.3 REQUIRED)
 list(APPEND EXTRA_LIBS glfw)

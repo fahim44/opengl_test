@@ -1,65 +1,13 @@
-#define DEBUG
-
 #include<GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "testLog.h"
 #include<iostream>
 #include<tuple>
 #include<fstream>
 #include<string>
 #include<sstream>
 
-//for getting current path
-#include<stdio.h>  /* defines FILENAME_MAX */
-// #define WINDOWS  /* uncomment this line to use it for windows.*/ 
-#ifdef WINDOWS
-    #include<direct.h>
-    #define GetCurrentDir _getcwd
-#else
-    #include<unistd.h>
-    #define GetCurrentDir getcwd
-#endif
-
-// error checking ---------------------------------------------for debug----------------------------------------
-#ifdef DEBUG
-    #define ASSERT(x) if (!(x)) __builtin_trap()
-    #define GLCall(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-    #define GLCallSetValue(return_type, func) GLClearError();\
-        return_type = func;\
-        ASSERT(GLLogCall(#func, __FILE__, __LINE__))
-
-#else
-    #define GLCall(x) x
-    #define GLCallSetValue(return_type, func) return_type = func
-#endif
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void GLClearError(){
-    while(glGetError() != GL_NO_ERROR);
-}
-
-
-static bool GLLogCall(const char* function, const char* file, int line){
-    while(GLenum error = glGetError()){
-        std::cout << "[OpenGL Error] (" << error <<" (0x" << std::hex << error << ") File: "<< file <<
-            " Function: "<< function << " line: " << std::dec << line <<" )\n";
-        return false;
-    }
-    return true;
-}
-/////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-static std::string GetCurrentWorkingDir() {
-  char buff[FILENAME_MAX];
-  GetCurrentDir( buff, FILENAME_MAX );
-  std::string current_working_dir(buff);
-  return current_working_dir;
-}
-/////////////////////////////////////////////////////////////////////////
+#include "testLog.h"
+#include "utilities.h"
 
 
 static std::tuple<std::string, std::string> parseShader(const std::string& filePath){

@@ -22,19 +22,24 @@ list(APPEND EXTRA_LIBS shaderLib)
 add_subdirectory(googletest)
 add_subdirectory(gltest)
 
+#conan dependency
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+list(APPEND EXTRA_LIBS ${CONAN_LIBS})
+
 #opengl
-find_package(glfw3 3.3 REQUIRED)
-list(APPEND EXTRA_LIBS glfw)
+#find_package(glfw3 3.3 REQUIRED)
+#list(APPEND EXTRA_LIBS glfw)
 
-find_package(GLEW REQUIRED)
-list(APPEND EXTRA_LIBS ${GLEW_LIBRARIES})
-list(APPEND EXTRA_DIRS ${GLEW_INCLUDE_DIRS})
+#find_package(GLEW REQUIRED)
+#list(APPEND EXTRA_LIBS ${GLEW_LIBRARIES})
+#list(APPEND EXTRA_DIRS ${GLEW_INCLUDE_DIRS})
 
 
-find_package(OpenGL REQUIRED)
-list(APPEND EXTRA_DIRS ${OPENGL_INCLUDE_DIR})
-list(APPEND EXTRA_LIBS ${OPENGL_gl_LIBRARY})
-list(APPEND EXTRA_LIBS ${OPENGL_glu_LIBRARY})
+#find_package(OpenGL REQUIRED)
+#list(APPEND EXTRA_DIRS ${OPENGL_INCLUDE_DIR})
+#list(APPEND EXTRA_LIBS ${OPENGL_gl_LIBRARY})
+#list(APPEND EXTRA_LIBS ${OPENGL_glu_LIBRARY})
 
 ##
 

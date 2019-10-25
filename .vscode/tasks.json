@@ -17,9 +17,9 @@
     },
     "tasks": [
         {
-            "label": "build cmake",
+            "label": "debug_prelaunch",
             "type": "shell",
-            "command":"cmake --build . --config Debug --target all -- -j 8",
+            "command":"conan install .. && cmake --build . --config Debug --target all -- -j 8",
         }
     ]
 }

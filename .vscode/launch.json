@@ -23,7 +23,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "build cmake",
+            "preLaunchTask": "debug_prelaunch",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]

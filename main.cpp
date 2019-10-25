@@ -25,6 +25,8 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    glfwSwapInterval(1);
+
 
     // glew init
     if(glewInit() != GLEW_OK){
@@ -88,6 +90,10 @@ int main(void)
     unsigned int shader = createShader(vertexShader,fragmentShader);
     GLCall(glUseProgram(shader));
 
+    GLCall( int uniforLocation = glGetUniformLocation(shader,"u_Color"));
+    ASSERT(uniforLocation != -1);
+    float redChannelColor = 0.0f;
+    float redChannelColorIncreament = 0.05f;
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /* Loop until the user closes the window */
@@ -104,8 +110,15 @@ int main(void)
         glEnd();*/
 
         //triangle
+        GLCall( glUniform4f(uniforLocation,redChannelColor, 0.3f, 0.8f, 1.0f));
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         GLCall(glDrawElements(GL_TRIANGLES, (2*3)/*num of indecies*/, GL_UNSIGNED_INT, nullptr));
+
+        if(redChannelColor > 1.0f)
+            redChannelColorIncreament = -0.05f;
+        else if (redChannelColor < 0.0f)
+            redChannelColorIncreament = 0.5f;
+        redChannelColor +=redChannelColorIncreament;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
